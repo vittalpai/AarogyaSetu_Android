@@ -32,12 +32,7 @@ android {
     buildToolsVersion project.APP_BUILD_TOOL_VERSION
 
     signingConfigs {
-        release {
-            storeFile file(keystoreProperties['key_store_cetificate'])
-            storePassword keystoreProperties['key_store_password']
-            keyAlias keystoreProperties['key_alias']
-            keyPassword keystoreProperties['key_password']
-        }
+
     }
 
     defaultConfig {
@@ -77,26 +72,21 @@ android {
         buildConfigField "String", "VERIFY_APP_URL", "\"${keystoreProperties['verify_app_url']}\""
 
 
-        applicationId "nic.goi.aarogyasetu"
+        applicationId "com.healthtrack"
         minSdkVersion Integer.parseInt(project.MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
         versionCode Integer.parseInt(project.APP_VERSION_CODE)
         versionName project.APP_VERSION_NAME
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runnfer.AndroidJUnitRunner"
         multiDexEnabled true
     }
 
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
             debuggable true
         }
         release {
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {

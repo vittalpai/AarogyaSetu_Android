@@ -150,39 +150,45 @@ class CorUtility {
                 else EventNames.EVENT_REGISTER_WITHOUT_LOC
             AnalyticsUtils.sendBasicEvent(eventName, ScreenNames.SCREEN_PERMISSION)
 
-            val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
-                .registerUser(getHeaders(false), registerationData)
 
-            call.enqueue(object : retrofit2.Callback<JsonElement> {
+            listener.loginSuccess()
+            checkStatus(context)
 
+            // TODO : Fix Register User Logic
 
-                override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
-                    if (response.isSuccessful && response.body() != null) {
-                        parseResponse(response, listener)
-                        if (!SharedPref.getStringParams(
-                                CoronaApplication.instance,
-                                SharedPrefsConstants.UNIQUE_ID,
-                                ""
-                            ).isNullOrEmpty()
-                        ) {
-                            listener.loginSuccess()
-                            checkStatus(context)
-                        } else {
-                            checkStatus(context, listener)
-                        }
-                    } else {
-                        listener.loginFailed()
-                    }
-                }
-
-                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
-                    val e = Exception(t)
-                    e.reportException()
-                    listener.loginFailed()
-                }
-
-
-            })
+//            val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
+//                .registerUser(getHeaders(false), registerationData)
+//
+//            call.enqueue(object : retrofit2.Callback<JsonElement> {
+//
+//
+//                override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
+//                    if (response.isSuccessful && response.body() != null) {
+//                        parseResponse(response, listener)
+//                        if (!SharedPref.getStringParams(
+//                                CoronaApplication.instance,
+//                                SharedPrefsConstants.UNIQUE_ID,
+//                                ""
+//                            ).isNullOrEmpty()
+//                        ) {
+//                            listener.loginSuccess()
+//                            checkStatus(context)
+//                        } else {
+//                            checkStatus(context, listener)
+//                        }
+//                    } else {
+//                        listener.loginFailed()
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+//                    val e = Exception(t)
+//                    e.reportException()
+//                    listener.loginFailed()
+//                }
+//
+//
+//            })
         }
 
 

@@ -84,43 +84,48 @@ object AuthUtility {
     fun signIn(mobile: String, listener: UserSignInListener?) {
         if (isSignedIn()) return
 
-        val client = nic.goi.aarogyasetu.network.NetworkClient.getRetrofitClient(
-            false,
-            true,
-            true,
-            AUTH_BASE_URL,
-            false
-        )
-        val generateOTP = GenerateOTP(mobile)
-        val map = mutableMapOf<String, String>()
-        map[Constants.X_API_KEY] = BuildConfig.AWS_API_KEY
-        map[Constants.OS] = Build.VERSION.SDK_INT.toString()
-        map[Constants.DEVICE_TYPE] = Build.MANUFACTURER + Constants.HYPHEN + Build.MODEL
-        val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
-            .generateOTP(map, generateOTP)
+        // TODO : Fix OTP Logic
+        AppExecutors.runOnMain {
+            listener?.onAskOtp()
+        }
 
-        call.enqueue(object : retrofit2.Callback<JSONObject> {
-            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
-                val e = Exception(t)
-                sendErrorCallback(listener, e, AuthErrorUnknown())
-            }
-
-            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
-                if (response.isSuccessful) {
-                    AppExecutors.runOnMain {
-                        listener?.onAskOtp()
-                    }
-                } else if (response.code() == 401) {
-                    val e =
-                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
-                    sendErrorCallback(listener, e, AuthErrorUserDisabled())
-                } else {
-                    val e =
-                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
-                    sendErrorCallback(listener, e, AuthErrorUnknown())
-                }
-            }
-        })
+//        val client = nic.goi.aarogyasetu.network.NetworkClient.getRetrofitClient(
+//            false,
+//            true,
+//            true,
+//            AUTH_BASE_URL,
+//            false
+//        )
+//        val generateOTP = GenerateOTP(mobile)
+//        val map = mutableMapOf<String, String>()
+//        map[Constants.X_API_KEY] = BuildConfig.AWS_API_KEY
+//        map[Constants.OS] = Build.VERSION.SDK_INT.toString()
+//        map[Constants.DEVICE_TYPE] = Build.MANUFACTURER + Constants.HYPHEN + Build.MODEL
+//        val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
+//            .generateOTP(map, generateOTP)
+//
+//        call.enqueue(object : retrofit2.Callback<JSONObject> {
+//            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
+//                val e = Exception(t)
+//                sendErrorCallback(listener, e, AuthErrorUnknown())
+//            }
+//
+//            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
+//                if (response.isSuccessful) {
+//                    AppExecutors.runOnMain {
+//                        listener?.onAskOtp()
+//                    }
+//                } else if (response.code() == 401) {
+//                    val e =
+//                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
+//                    sendErrorCallback(listener, e, AuthErrorUserDisabled())
+//                } else {
+//                    val e =
+//                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
+//                    sendErrorCallback(listener, e, AuthErrorUnknown())
+//                }
+//            }
+//        })
     }
 
     @AnyThread
@@ -138,49 +143,58 @@ object AuthUtility {
         map[Constants.X_API_KEY] = BuildConfig.AWS_API_KEY
         map[Constants.OS] = Build.VERSION.SDK_INT.toString()
         map[Constants.DEVICE_TYPE] = Build.MANUFACTURER + Constants.HYPHEN + Build.MODEL
-        val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
-            .validateOTP(map, validateOTP)
+       // val call = client.create(nic.goi.aarogyasetu.network.PostDataInterface::class.java)
+        //    .validateOTP(map, validateOTP)
 
-        call.enqueue(object :
-            retrofit2.Callback<nic.goi.aarogyasetu.models.network.TokenValidationResponse> {
-            override fun onFailure(
-                call: Call<nic.goi.aarogyasetu.models.network.TokenValidationResponse>,
-                t: Throwable
-            ) {
-                val e = Exception(t)
-                sendErrorCallback(listener, e, AuthErrorInvalidOtp())
-            }
-
-            override fun onResponse(
-                call: Call<nic.goi.aarogyasetu.models.network.TokenValidationResponse>,
-                response: Response<nic.goi.aarogyasetu.models.network.TokenValidationResponse>
-            ) {
-                if (response.isSuccessful && !response.body()?.authToken.isNullOrBlank() &&
-                    !response.body()?.refreshToken.isNullOrBlank()
-                ) {
-                    val token = response.body()!!.authToken
-                    val refreshToken = response.body()!!.refreshToken
-                    setToken(token)
-                    setRefreshToken(refreshToken)
-                    setMobile(mobile)
-                    AppExecutors.runOnMain {
-                        listener?.onUserVerified(token)
-                    }
-                } else if (response.code() == 400) {
-                    val e =
-                        Exception("Api Response is not success. Invalid OTP = ${response.errorBody()?.string()}")
-                    sendErrorCallback(listener, e, AuthErrorInvalidOtp())
-                } else if (response.code() == 401) {
-                    val e =
-                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
-                    sendErrorCallback(listener, e, AuthErrorUserDisabled())
-                } else {
-                    val e =
-                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
-                    sendErrorCallback(listener, e, AuthErrorUnknown())
-                }
-            }
-        })
+        val token = "xxxxxxxxx"
+        val refreshToken = "xxxxxxxxx"
+        setToken(token)
+        setRefreshToken(refreshToken)
+        setMobile(mobile)
+        AppExecutors.runOnMain {
+            listener?.onUserVerified(token)
+        }
+        // TODO: Fix Veifu OTP Logic
+//        call.enqueue(object :
+//            retrofit2.Callback<nic.goi.aarogyasetu.models.network.TokenValidationResponse> {
+//            override fun onFailure(
+//                call: Call<nic.goi.aarogyasetu.models.network.TokenValidationResponse>,
+//                t: Throwable
+//            ) {
+//                val e = Exception(t)
+//                sendErrorCallback(listener, e, AuthErrorInvalidOtp())
+//            }
+//
+//            override fun onResponse(
+//                call: Call<nic.goi.aarogyasetu.models.network.TokenValidationResponse>,
+//                response: Response<nic.goi.aarogyasetu.models.network.TokenValidationResponse>
+//            ) {
+//                if (response.isSuccessful && !response.body()?.authToken.isNullOrBlank() &&
+//                    !response.body()?.refreshToken.isNullOrBlank()
+//                ) {
+//                    val token = response.body()!!.authToken
+//                    val refreshToken = response.body()!!.refreshToken
+//                    setToken(token)
+//                    setRefreshToken(refreshToken)
+//                    setMobile(mobile)
+//                    AppExecutors.runOnMain {
+//                        listener?.onUserVerified(token)
+//                    }
+//                } else if (response.code() == 400) {
+//                    val e =
+//                        Exception("Api Response is not success. Invalid OTP = ${response.errorBody()?.string()}")
+//                    sendErrorCallback(listener, e, AuthErrorInvalidOtp())
+//                } else if (response.code() == 401) {
+//                    val e =
+//                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
+//                    sendErrorCallback(listener, e, AuthErrorUserDisabled())
+//                } else {
+//                    val e =
+//                        Exception("Api Response is not success. Response = ${response.errorBody()?.string()}")
+//                    sendErrorCallback(listener, e, AuthErrorUnknown())
+//                }
+//            }
+//        })
     }
 
     @JvmStatic
