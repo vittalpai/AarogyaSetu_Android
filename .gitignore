@@ -20,9 +20,7 @@ captures/
 *.iml
 
 local.properties
-keystore.properties
 app/covidSignCertificate.jks
-app/google-services.json
 app/src/debug/google-services.json
 debug.keystore
 
