@@ -130,13 +130,13 @@
 
     </RelativeLayout>
 
-    <nic.goi.aarogyasetu.views.HomeNavigationView
+    <com.healthtrack.views.HomeNavigationView
         android:id="@+id/navigation_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
-    </nic.goi.aarogyasetu.views.HomeNavigationView>
+    </com.healthtrack.views.HomeNavigationView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

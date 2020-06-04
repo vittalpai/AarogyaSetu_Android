@@ -9,7 +9,7 @@
         app:zxing_framing_rect_height="250dp"
         app:zxing_framing_rect_width="250dp" />
 
-    <nic.goi.aarogyasetu.zxing.CustomViewFinderView
+    <com.healthtrack.zxing.CustomViewFinderView
         android:id="@+id/zxing_viewfinder_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
